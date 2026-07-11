@@ -127,4 +127,8 @@ Si bien el modelo *MasterStockTransformer* demostró un rendimiento predictivo s
 = Anexos
 
 == Código Implementado
-La totalidad de los algoritmos desarrollados para esta investigación, incluyendo los canales de extracción de datos automatizados vía API (`yfinance`), la arquitectura matemática neuronal (Transformer y LSTM en PyTorch), los scripts del torneo de hiperparámetros (Grid Search) y el entorno visual analítico (Matplotlib/Seaborn), se encuentran versionados y disponibles para la comunidad. El código fuente completo será entregado como un anexo interactivo del proyecto final mediante un enlace a un repositorio de GitHub y un entorno de ejecución en Google Colab para garantizar la total reproducibilidad científica de estos resultados.
+La totalidad de los algoritmos desarrollados para esta investigación, incluyendo los canales de extracción de datos automatizados vía API (`yfinance`), la arquitectura matemática neuronal (Transformer y LSTM en PyTorch), los scripts del torneo de hiperparámetros (Grid Search) y el entorno visual analítico (Matplotlib/Seaborn), se encuentran versionados y disponibles para la comunidad. El código fuente completo está entregado como un anexo interactivo del proyecto final en el siguiente repositorio de GitHub:
+
+#link("https://github.com/gmborjasb/ML_MasterStockTransformer")[https://github.com/gmborjasb/ML_MasterStockTransformer]
+
+Este repositorio incluye todo el entorno necesario para garantizar la total reproducibilidad científica de los resultados obtenidos (utilizando semillas matemáticas estocásticas) e incluye instrucciones de ejecución paso a paso.
