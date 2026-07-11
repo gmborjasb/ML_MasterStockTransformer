@@ -1,5 +1,6 @@
 #import "@preview/charged-ieee:0.1.4": ieee
 #set text(lang: "es")
+#show link: underline
 
 #show: ieee.with(
   title: [Predicción de Retornos Bancarios Mediante Mecanismos de Atención Cruzada],
@@ -38,13 +39,14 @@ Se utilizó un dataset creado para el proyecto mediante la extracción de datos 
 
 = Revisión bibliográfica
 
-El modelamiento de series temporales financieras ha evolucionado hacia arquitecturas de aprendizaje profundo capaces de capturar dependencias no lineales, superando a los modelos recurrentes como LSTM con el estado actual de JPM, logrando un MAE de \$2.83 y un MAPE de 1.12% en los 150 días de prueba, superando al modelo recurrente tradicional (LSTM). @hochreiter1997long. La literatura identifica los mecanismos de atención, introducidos por @vaswani2017attention, como herramientas robustas para abordar la volatilidad @lim2021temporal.
+El modelamiento de series temporales financieras ha evolucionado hacia arquitecturas de aprendizaje profundo capaces de capturar dependencias no lineales, superando a los modelos recurrentes como LSTM @hochreiter1997long. La literatura identifica los mecanismos de atención, introducidos por @vaswani2017attention, como herramientas robustas para abordar la volatilidad @lim2021temporal.
 
 En la base de esta investigación se encuentra el trabajo de @li2024master, quienes introducen el modelo MASTER, argumentando que las correlaciones entre activos ocurren de manera momentánea y cruzada. Su propuesta de guiar la predicción con información global fundamenta el uso de atención cruzada en este proyecto. Asimismo, @li2025transformer proponen "Stockformer", reforzando que el pronóstico debe tratarse como un problema multivariado y no como una autorregresión aislada, idea soportada también por @zhang2025emat y @chen2024cmtf.
 
 Pese a la potencia de los Transformers, @wang2023stock señala debilidades en la captura de patrones locales, sugiriendo arquitecturas híbridas. No obstante, @mozaffari2024predictive demuestran que la arquitectura de atención multi-cabezal supera consistentemente a modelos recurrentes como LSTM en la caracterización de dinámicas de mercado. Finalmente, @muhammad2022transformer validan la robustez de estos modelos en entornos de alta volatilidad.
 
 Para contextualizar el avance de estas arquitecturas, es vital considerar la evolución detallada en estudios comprehensivos como el de @wen2023transformers, quienes exponen los retos de adaptar Transformers a series de tiempo. Para mitigar estos problemas, propuestas recientes como Autoformer @wu2021autoformer y FEDformer @zhou2022fedformer introducen mecanismos de descomposición en frecuencia para predicciones a largo plazo. Más aún, la integración de análisis de sentimiento mediante Modelos Fundacionales (LLMs) ha comenzado a fusionarse con Transformers @chen2024sentiment, demostrando que el futuro de la predicción radica en el análisis de eventos complejos @ding2020deep.
+
 = Metodología
 
 La metodología de esta investigación se divide en tres fases principales: la ingeniería de características para el modelo de atención, la optimización de hiperparámetros (Grid Search) y el entrenamiento de tres arquitecturas de red neuronal para el estudio comparativo.
@@ -55,9 +57,11 @@ Para evitar la trampa académica del "Look-ahead Bias", los datos fueron separad
 - *Tensor Key/Value (Contexto):* Comportamiento histórico simultáneo de los bancos rivales y el índice macroeconómico (XLF).
 
 == Optimización de Hiperparámetros (Grid Search)
+
 Para asegurar el rigor científico, se programó una búsqueda de cuadrícula (Grid Search) automatizada. Se evaluaron 16 configuraciones combinando el número de capas de atención (1 vs 2), la dimensión del modelo (64 vs 128), el dropout (0.1 vs 0.2) y el número de épocas (30 vs 50). La configuración óptima que minimizó el Error Cuadrático Medio (MSE) en el conjunto de validación fue: `d_model=128`, `num_layers=1`, `dropout=0.1` en `30 épocas`.
 
 == Arquitecturas Entrenadas
+
 Se entrenaron tres arquitecturas bajo las mismas condiciones óptimas:
 1. *MasterStockTransformer:* El modelo propuesto con atención cruzada hacia el mercado completo.
 2. *Baseline LSTM:* Red neuronal recurrente tradicional para establecer una línea base comparativa.
@@ -68,6 +72,7 @@ Se entrenaron tres arquitecturas bajo las mismas condiciones óptimas:
 Los modelos fueron evaluados reconstruyendo el precio absoluto (en dólares) a partir de los retornos logarítmicos predichos sobre un horizonte temporal de 150 días de prueba.
 
 == Comparativa de Precisión (Leaderboard)
+
 El *MasterStockTransformer* superó significativamente al modelo LSTM clásico. Al medir el Error Absoluto Medio (MAE), el modelo Transformer logró predecir el precio con un margen de error de tan solo \$2.83 dólares, frente a los \$3.33 dólares del LSTM. Asimismo, el RMSE del Transformer fue de \$4.00 frente a los \$4.57 del LSTM, con un R² sobresaliente de 0.9931. Esta reducción del error en casi 50 centavos por acción justifica contundentemente la superioridad de la arquitectura basada en atención para series de tiempo financieras de alta volatilidad. Adicionalmente, el análisis de los residuales mostró una distribución normal centrada en cero (ruido blanco), demostrando ausencia de sesgo predictivo.
 
 #figure(
@@ -103,9 +108,11 @@ El *MasterStockTransformer* superó significativamente al modelo LSTM clásico. 
 )
 
 == El Impacto del Contexto Macro (Ablación)
+
 El estudio de ablación confirmó de nuevo la hipótesis principal del proyecto: el Transformer entrenado *sin* el contexto del mercado (XLF, BAC, C, WFC) obtuvo peores métricas (MAE de \$2.93 y RMSE de \$4.25) que el modelo entrenado con el panel completo. Esto demuestra empíricamente, y bajo control estocástico riguroso, que la integración multivariada mediante atención cruzada logra capturar exitosamente la influencia sistémica del mercado sobre el precio individual de JPMorgan.
 
 == Interpretabilidad: Mapa de Calor de Atención
+
 A diferencia de los modelos de "caja negra" convencionales (como el LSTM), el mecanismo de atención cruzada permitió extraer un Mapa de Calor (Heatmap) de los pesos probabilísticos de la última inferencia. La matriz resultante reveló un patrón de fuertes bandas verticales (especialmente en índices específicos más recientes como el t-1 y el t-4, correspondientes a las columnas 19 y 16). Esto demuestra matemáticamente que la red neuronal no pondera el pasado de forma lineal decreciente, sino que el estado actual de la acción (Query) presta picos de atención intensa a choques o eventos sistémicos específicos del mercado (Key) ocurridos en el pasado reciente, validando la capacidad del modelo para extraer "memoria" asimétrica de factores exógenos.
 
 #figure(
@@ -127,8 +134,9 @@ Si bien el modelo *MasterStockTransformer* demostró un rendimiento predictivo s
 = Anexos
 
 == Código Implementado
+
 La totalidad de los algoritmos desarrollados para esta investigación, incluyendo los canales de extracción de datos automatizados vía API (`yfinance`), la arquitectura matemática neuronal (Transformer y LSTM en PyTorch), los scripts del torneo de hiperparámetros (Grid Search) y el entorno visual analítico (Matplotlib/Seaborn), se encuentran versionados y disponibles para la comunidad. El código fuente completo está entregado como un anexo interactivo del proyecto final en el siguiente repositorio de GitHub:
 
-#link("https://github.com/gmborjasb/ML_MasterStockTransformer")[https://github.com/gmborjasb/ML_MasterStockTransformer]
+#align(center)[#link("https://github.com/gmborjasb/ML_MasterStockTransformer")[https://github.com/gmborjasb/ML_MasterStockTransformer]]
 
-Este repositorio incluye todo el entorno necesario para garantizar la total reproducibilidad científica de los resultados obtenidos (utilizando semillas matemáticas estocásticas) e incluye instrucciones de ejecución paso a paso.
+Este repositorio incluye todo el entorno necesario para garantizar la total reproducibilidad científica de los resultados obtenidos (utilizando semillas) e incluye instrucciones de ejecución paso a paso.

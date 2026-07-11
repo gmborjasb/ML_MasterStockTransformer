@@ -30,7 +30,7 @@ La arquitectura MASTER probó empíricamente que la inclusión de contexto macro
 - `networks.py`: Contiene las clases puras en PyTorch de `MasterStockTransformer`, `LSTMModel` y `StockDataset` para un código modularizado.
 - `docs/`: Directorio que contiene el manuscrito formal del proyecto redactado en Typst (`main.typ`), su bibliografía (`biblio.bib`), y todos los gráficos renderizados de alta calidad (`img/`).
 
-> Nota: Los pesos entrenados del modelo (`*.pth`), los sets de datos transaccionales brutos (`.csv`) y los papers de referencias externas han sido ignorados (`.gitignore`) para mantener la agilidad del repositorio.
+> Nota: Los pesos entrenados del modelo (`*.pth`) y los papers de referencias externas han sido ignorados (`.gitignore`) para mantener la agilidad del repositorio. El dataset (`.csv`) se encuentra incluido para facilitar la reproducibilidad directa.
 
 ## Tecnologías Utilizadas
 - **Core ML:** PyTorch, Torch.nn

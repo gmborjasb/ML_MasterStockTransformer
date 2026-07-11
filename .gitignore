@@ -5,7 +5,6 @@ __pycache__/
 
 # Machine Learning weights & data
 *.pth
-*.csv
 
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
