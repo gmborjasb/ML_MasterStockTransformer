@@ -1,0 +1,17 @@
+# Python Virtual Environment
+.venv/
+__pycache__/
+*.pyc
+
+# Machine Learning weights & data
+*.pth
+*.csv
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Exclude the research papers directory
+papers/
+
+# OS generated files
+.DS_Store
