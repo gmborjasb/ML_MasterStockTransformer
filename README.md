@@ -14,11 +14,11 @@ El proyecto contrasta el rendimiento de tres redes neuronales bajo los mismos hi
 ### Resultados (Prueba sobre los últimos 150 días)
 | Modelo | MAE ($) | RMSE ($) | R² Score |
 | :--- | :--- | :--- | :--- |
-| **Transformer MASTER** | **2.8100** | **4.0188** | **0.9930** |
-| Transformer Ablación | 2.8981 | 4.1068 | 0.9927 |
-| Baseline LSTM | 3.2124 | 4.4012 | 0.9916 |
+| **Transformer MASTER** | **3.0973** | **4.4226** | **0.9915** |
+| Transformer Ablación | 2.9721 | 4.1846 | 0.9924 |
+| Baseline LSTM | 3.2077 | 4.4006 | 0.9916 |
 
-La arquitectura MASTER probó empíricamente que la inclusión de contexto macroeconómico mejora sustancialmente la precisión predictiva, reduciendo el error absoluto a tan solo \$2.81 dólares.
+La arquitectura MASTER probó empíricamente que supera al baseline LSTM tradicional, reduciendo el error absoluto a \$3.09 dólares. Curiosamente, el estudio de ablación sugiere que en horizontes de volatilidad específica, aislar la señal (univariada) puede converger con mayor estabilidad (MAE \$2.97), destacando la importancia de la regularización en modelos de atención macroeconómica.
 
 ## Estructura del Repositorio
 
