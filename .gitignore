@@ -15,3 +15,7 @@ papers/
 
 # OS generated files
 .DS_Store
+
+# Temporary scripts
+add_seed.py
+inject_and_run.py
