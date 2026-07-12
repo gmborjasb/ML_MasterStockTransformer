@@ -14,11 +14,11 @@ El proyecto contrasta el rendimiento de tres redes neuronales bajo los mismos hi
 ### Resultados (Prueba sobre los últimos 150 días)
 | Modelo | MAE ($) | RMSE ($) | R² Score |
 | :--- | :--- | :--- | :--- |
-| **Transformer MASTER** | **2.8264** | **3.9951** | **0.9931** |
-| Transformer Ablación | 2.9276 | 4.2467 | 0.9922 |
-| Baseline LSTM | 3.3294 | 4.5707 | 0.9909 |
+| **Transformer MASTER** | **3.3145** | **4.5926** | **0.9908** |
+| Transformer Ablación | 4.1339 | 5.7322 | 0.9857 |
+| Baseline LSTM | 4.4927 | 5.9939 | 0.9844 |
 
-La arquitectura MASTER probó empíricamente que la inclusión de contexto macroeconómico mejora sustancialmente la precisión predictiva, reduciendo el error absoluto a tan solo \$2.83 dólares y aplastando significativamente al modelo univariado (Ablación) y al baseline (LSTM).
+La arquitectura MASTER (64 dimensiones, 2 capas, 50 épocas) probó empíricamente que la inclusión de contexto macroeconómico mejora sustancialmente la precisión predictiva, reduciendo el error absoluto a tan solo \$3.31 dólares y superando contundentemente al modelo univariado (Ablación) y al baseline (LSTM).
 
 ## Estructura del Repositorio
 

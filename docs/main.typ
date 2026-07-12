@@ -58,7 +58,7 @@ Para evitar la trampa académica del "Look-ahead Bias", los datos fueron separad
 
 == Optimización de Hiperparámetros (Grid Search)
 
-Para asegurar el rigor científico, se programó una búsqueda de cuadrícula (Grid Search) automatizada. Se evaluaron 16 configuraciones combinando el número de capas de atención (1 vs 2), la dimensión del modelo (64 vs 128), el dropout (0.1 vs 0.2) y el número de épocas (30 vs 50). La configuración óptima que minimizó el Error Cuadrático Medio (MSE) en el conjunto de validación fue: `d_model=128`, `num_layers=1`, `dropout=0.1` en `30 épocas`.
+Para asegurar el rigor científico, se programó una búsqueda de cuadrícula (Grid Search) automatizada. Se evaluaron 16 configuraciones combinando el número de capas de atención (1 vs 2), la dimensión del modelo (64 vs 128), el dropout (0.1 vs 0.2) y el número de épocas (30 vs 50). La configuración óptima que minimizó el Error Cuadrático Medio (MSE) en el conjunto de validación fue: `d_model=64`, `num_layers=2`, `dropout=0.1` en `50 épocas`.
 
 == Arquitecturas Entrenadas
 
@@ -73,16 +73,16 @@ Los modelos fueron evaluados reconstruyendo el precio absoluto (en dólares) a p
 
 == Comparativa de Precisión (Leaderboard)
 
-El *MasterStockTransformer* superó significativamente al modelo LSTM clásico. Al medir el Error Absoluto Medio (MAE), el modelo Transformer logró predecir el precio con un margen de error de tan solo \$2.83 dólares, frente a los \$3.33 dólares del LSTM. Asimismo, el RMSE del Transformer fue de \$4.00 frente a los \$4.57 del LSTM, con un R² sobresaliente de 0.9931. Esta reducción del error en casi 50 centavos por acción justifica contundentemente la superioridad de la arquitectura basada en atención para series de tiempo financieras de alta volatilidad. Adicionalmente, el análisis de los residuales mostró una distribución normal centrada en cero (ruido blanco), demostrando ausencia de sesgo predictivo.
+El *MasterStockTransformer* superó significativamente al modelo LSTM clásico. Al medir el Error Absoluto Medio (MAE), el modelo Transformer logró predecir el precio con un margen de error de tan solo \$3.31 dólares, frente a los \$4.49 dólares del LSTM. Asimismo, el RMSE del Transformer fue de \$4.59 frente a los \$5.99 del LSTM, con un R² sobresaliente de 0.9908. Esta reducción del error en más de 1 dólar por acción justifica contundentemente la superioridad de la arquitectura basada en atención para series de tiempo financieras de alta volatilidad. Adicionalmente, el análisis de los residuales mostró una distribución normal centrada en cero (ruido blanco), demostrando ausencia de sesgo predictivo.
 
 #figure(
   table(
     columns: (auto, auto, auto, auto, auto, auto),
     align: (left, right, right, right, right, right),
     [*Modelo*], [*MAE (\$)*], [*MSE*], [*RMSE (\$)*], [*MAPE (%)*], [*R² Score*],
-    [Transformer MASTER (Full)], [2.8264], [15.9606], [3.9951], [1.1223], [0.9931],
-    [Baseline LSTM], [3.3294], [20.8911], [4.5707], [1.3208], [0.9909],
-    [Transformer Ablación (Solo JPM)], [2.9276], [18.0347], [4.2467], [1.1706], [0.9922],
+    [Transformer MASTER (Full)], [3.3145], [21.0919], [4.5926], [1.3061], [0.9908],
+    [Baseline LSTM], [4.4927], [35.9272], [5.9939], [1.8070], [0.9844],
+    [Transformer Ablación (Solo JPM)], [4.1339], [32.8585], [5.7322], [1.6379], [0.9857],
   ),
   caption: [Leaderboard de Precisión Predictiva]
 )
@@ -109,7 +109,7 @@ El *MasterStockTransformer* superó significativamente al modelo LSTM clásico. 
 
 == El Impacto del Contexto Macro (Ablación)
 
-El estudio de ablación confirmó de nuevo la hipótesis principal del proyecto: el Transformer entrenado *sin* el contexto del mercado (XLF, BAC, C, WFC) obtuvo peores métricas (MAE de \$2.93 y RMSE de \$4.25) que el modelo entrenado con el panel completo. Esto demuestra empíricamente, y bajo control estocástico riguroso, que la integración multivariada mediante atención cruzada logra capturar exitosamente la influencia sistémica del mercado sobre el precio individual de JPMorgan.
+El estudio de ablación confirmó de nuevo la hipótesis principal del proyecto: el Transformer entrenado *sin* el contexto del mercado (XLF, BAC, C, WFC) obtuvo peores métricas (MAE de \$4.13 y RMSE de \$5.73) que el modelo entrenado con el panel completo. Esto demuestra empíricamente, y bajo control estocástico riguroso, que la integración multivariada mediante atención cruzada logra capturar exitosamente la influencia sistémica del mercado sobre el precio individual de JPMorgan.
 
 == Interpretabilidad: Mapa de Calor de Atención
 
@@ -122,7 +122,7 @@ A diferencia de los modelos de "caja negra" convencionales (como el LSTM), el me
 
 = Conclusiones
 
-Esta investigación empírica demuestra que el uso de mecanismos de Atención Cruzada (Cross-Attention) en arquitecturas Transformer mejora significativamente la predicción direccional de activos financieros individuales al integrarlos con el contexto macroeconómico. Al lograr un R² de 0.9931 y reducir el error absoluto a \$2.83 frente al baseline LSTM (\$3.33) y al modelo de ablación (\$2.93), el *MasterStockTransformer* evidencia que el comportamiento del mercado dicta, en gran medida, el destino de una acción individual. La visualización de los pesos de atención cruzada proporciona una herramienta robusta, precisa e interpretable para la gestión cuantitativa de riesgos e inversiones.
+Esta investigación empírica demuestra que el uso de mecanismos de Atención Cruzada (Cross-Attention) en arquitecturas Transformer mejora significativamente la predicción direccional de activos financieros individuales al integrarlos con el contexto macroeconómico. Al lograr un R² de 0.9908 y reducir el error absoluto a \$3.31 frente al baseline LSTM (\$4.49) y al modelo de ablación (\$4.13), el *MasterStockTransformer* evidencia que el comportamiento del mercado dicta, en gran medida, el destino de una acción individual. La visualización de los pesos de atención cruzada proporciona una herramienta robusta, precisa e interpretable para la gestión cuantitativa de riesgos e inversiones.
 
 = Trabajo Futuro
 
